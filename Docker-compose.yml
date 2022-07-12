@@ -1,0 +1,36 @@
+services:
+  mongodb:
+    image: mongo
+    volumes:
+      - mongodata:/data/db
+    networks:
+      - salesnet
+    ports:
+      - "27017:27017"
+
+  prometheus:
+    image: prom/prometheus
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes:
+      - .\src\main\resources:/etc/prometheus/
+    networks:
+      - salesnet
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    environment:
+      - GF_SERVER_PROTOCOL=http
+      - GF_SERVER_HTTP_PORT=3000
+    networks:
+      - salesnet
+    ports:
+      - "3000:3000"
+
+volumes:
+  mongodata:
+
+networks:
+  salesnet:
+    driver: bridge
