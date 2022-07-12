@@ -20,7 +20,7 @@ public class Cart {
 
     @Id
     private String id = UUID.randomUUID().toString();
-    private String userId;
+    private String shopperId;
     private BigDecimal totalPrice;
     private Cep cep;
     private Status status;

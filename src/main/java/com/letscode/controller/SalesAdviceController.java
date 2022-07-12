@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestController
 @RequiredArgsConstructor
 @RestControllerAdvice
+@RequestMapping("/sales")
 public class SalesAdviceController {
 
     @GetMapping("/health-check")
