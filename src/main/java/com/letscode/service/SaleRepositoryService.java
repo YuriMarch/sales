@@ -28,6 +28,19 @@ public class SaleRepositoryService {
         return getCart(cartId).map(this::verifyDeleteConditions).flatMap(cart -> saleRepository.deleteById(cartId));
     }
 
+    public Cart verifyShopper(Cart cart, String userId){
+        if(!cart.getShopperId().equals(userId)){
+            throw new BusinessException("User Id does not match with cart user id");
+        }
+        return cart;
+    }
+
+    public void validateStatusCart(Cart cart){
+        if(cart.getStatus() != Status.MOUNTING){
+            throw new BusinessException("Cart is not in mounting status");
+        }
+    }
+
     private Cart verifyDeleteConditions(Cart cart) {
         if (cart.getStatus() != Status.MOUNTING)
             throw new BusinessException("Cart can't be deleted because it was already finished");

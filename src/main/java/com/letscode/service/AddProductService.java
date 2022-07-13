@@ -1,10 +1,8 @@
 package com.letscode.service;
 
 import com.letscode.client.ProductClientService;
-import com.letscode.controller.exceptions.BusinessException;
 import com.letscode.dto.Product;
 import com.letscode.dto.ProductRequest;
-import com.letscode.enumerator.Status;
 import com.letscode.model.Cart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +21,7 @@ public class AddProductService {
 
     public Mono<Cart> execute(ProductRequest productRequest){
         Mono<Cart> cart = saleRepositoryService.getCart(productRequest.getCartId())
-                .map(cart1 -> verifyUser(cart1, productRequest.getShopperId()));
+                .map(cart1 -> saleRepositoryService.verifyShopper(cart1, productRequest.getShopperId()));
 
         Mono<Product> product = productClientService.getProduct(productRequest.getProductId())
                 .map(product1 -> this.setProductQuantity(product1, productRequest.getQuantity()));
@@ -34,21 +32,8 @@ public class AddProductService {
                 .flatMap(saleRepositoryService::saveCart);
     }
 
-    public Cart verifyUser(Cart cart, String userId){
-        if(!cart.getShopperId().equals(userId)){
-            throw new BusinessException("User Id does not match with cart user id");
-        }
-        return cart;
-    }
-
-    public void validateStatusCart(Cart cart){
-        if(cart.getStatus() != Status.MOUNTING){
-            throw new BusinessException("Cart is not in mounting status");
-        }
-    }
-
     private Cart addProduct(Cart cart, Product product){
-        validateStatusCart(cart);
+        saleRepositoryService.validateStatusCart(cart);
         List<Product> products = cart.getProducts();
         List<String> productsId = products.stream().map(Product::getId).collect(Collectors.toList());
         if(productsId.contains(product.getId())){
