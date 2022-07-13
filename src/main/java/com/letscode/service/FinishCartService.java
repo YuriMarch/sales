@@ -1,7 +1,7 @@
 package com.letscode.service;
 
 import com.letscode.client.ShopperClientService;
-import com.letscode.controller.exceptions.BusinessException;
+import com.letscode.exceptions.BusinessException;
 import com.letscode.dto.FinishCartRequest;
 import com.letscode.dto.Shopper;
 import com.letscode.enumerator.Status;
@@ -19,8 +19,8 @@ public class FinishCartService {
     private final SaleRepositoryService saleRepositoryService;
     private final ShopperClientService shopperClientService;
 
-    private Mono<Cart> execute(FinishCartRequest finishCartRequest) {
-        Mono<Cart> cart = saleRepositoryService.getCart(finishCartRequest.getCartId());
+    public Mono<Cart> execute(FinishCartRequest finishCartRequest) {
+        Mono<Cart> cart = saleRepositoryService.getCartById(finishCartRequest.getCartId());
 
         Mono<Shopper> shopper = shopperClientService.getShopper(finishCartRequest.getShopperId())
                 .map(s -> verifyUserCpfAndPassword(s, finishCartRequest.getCpf(), finishCartRequest.getPassword()));

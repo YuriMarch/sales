@@ -1,4 +1,4 @@
-package com.letscode.controller.exceptions;
+package com.letscode.exceptions;
 
 import lombok.*;
 

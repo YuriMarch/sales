@@ -1,6 +1,6 @@
 package com.letscode.service;
 
-import com.letscode.controller.exceptions.NotExistException;
+import com.letscode.exceptions.NotExistException;
 import com.letscode.dto.Product;
 import com.letscode.dto.ProductRequest;
 import com.letscode.model.Cart;
@@ -19,7 +19,7 @@ public class RemoveProductService {
     private final PriceService priceService;
 
     public Mono<Cart> execute(ProductRequest productRequest){
-        return saleRepositoryService.getCart(productRequest.getCartId())
+        return saleRepositoryService.getCartById(productRequest.getCartId())
                 .map(cart -> saleRepositoryService.verifyShopper(cart, productRequest.getShopperId()))
                 .map(cart -> this.removeProduct(cart, productRequest))
                 .map(priceService::updateTotalPrice)

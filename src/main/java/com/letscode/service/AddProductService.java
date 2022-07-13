@@ -20,7 +20,7 @@ public class AddProductService {
     private final ProductClientService productClientService;
 
     public Mono<Cart> execute(ProductRequest productRequest){
-        Mono<Cart> cart = saleRepositoryService.getCart(productRequest.getCartId())
+        Mono<Cart> cart = saleRepositoryService.getCartById(productRequest.getCartId())
                 .map(cart1 -> saleRepositoryService.verifyShopper(cart1, productRequest.getShopperId()));
 
         Mono<Product> product = productClientService.getProduct(productRequest.getProductId())

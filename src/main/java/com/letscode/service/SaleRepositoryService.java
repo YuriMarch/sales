@@ -1,7 +1,7 @@
 package com.letscode.service;
 
-import com.letscode.controller.exceptions.BusinessException;
-import com.letscode.controller.exceptions.NotExistException;
+import com.letscode.exceptions.BusinessException;
+import com.letscode.exceptions.NotExistException;
 import com.letscode.enumerator.Status;
 import com.letscode.model.Cart;
 import com.letscode.repository.SaleRepository;
@@ -16,16 +16,16 @@ public class SaleRepositoryService {
 
     private final SaleRepository saleRepository;
 
-    public Flux<Cart> getCarts() {
+    public Flux<Cart> getAllCarts() {
         return saleRepository.findAll();
     }
 
-    public Mono<Cart> getCart(String cartId) {
+    public Mono<Cart> getCartById(String cartId) {
         return saleRepository.findById(cartId).switchIfEmpty(Mono.error(new NotExistException("Cart not found")));
     }
 
-    public Mono<Void> deleteCart(String cartId) {
-        return getCart(cartId).map(this::verifyDeleteConditions).flatMap(cart -> saleRepository.deleteById(cartId));
+    public Mono<Void> deleteCartById(String cartId) {
+        return getCartById(cartId).map(this::verifyDeleteConditions).flatMap(cart -> saleRepository.deleteById(cartId));
     }
 
     public Cart verifyShopper(Cart cart, String userId){
